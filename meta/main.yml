@@ -1,0 +1,26 @@
+---
+
+galaxy_info:
+  role_name: geoip
+  namespace: bodsch
+
+  author: Bodo Schulz
+  description: download and installs geoip data
+
+  license: Apache
+  min_ansible_version: "2.10"
+
+  platforms:
+    - name: ArchLinux
+    - name: Debian
+      versions:
+        # 10
+        - buster
+        - bullseye
+
+  galaxy_tags:
+    - webserver
+
+dependencies: []
+
+...

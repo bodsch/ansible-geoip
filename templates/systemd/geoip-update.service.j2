@@ -1,0 +1,18 @@
+#jinja2: trim_blocks: True, lstrip_blocks: True
+# {{ ansible_managed }}
+
+[Unit]
+Description         = update geoip database.
+
+[Service]
+Type                = oneshot
+
+WorkingDirectory    = /tmp
+User                = root
+Group               = root
+StopWhenUnneeded    = True
+
+ExecStart           = /bin/geoip_update.py
+
+[Install]
+WantedBy            = multi-user.target

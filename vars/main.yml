@@ -1,0 +1,16 @@
+---
+
+geoip_local_tmp_directory: "{{
+  lookup('env', 'CUSTOM_LOCAL_TMP_DIRECTORY') |
+  default(lookup('env', 'HOME') ~ '/.cache/ansible/geoip', true) }}"
+
+geoip_remote_tmp_directory: /var/cache/ansible/geoip
+
+# https://www.miyuru.lk/geoiplegacy
+geoip_source_base: https://dl.miyuru.lk/geoip
+
+geoip_dependencies:
+  - gzip
+
+systemd_etc_directory: /etc/systemd/system
+systemd_lib_directory: /lib/systemd/system

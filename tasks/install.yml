@@ -1,0 +1,74 @@
+---
+
+- name: install download helper
+  ansible.builtin.copy:
+    src: geoip_update.py
+    dest: /bin/geoip_update.py
+    mode: "0750"
+
+- name: configure systemd
+  when:
+    - ansible_service_mgr == 'systemd'
+  block:
+    - name: create systemd service unit geoip-update.service
+      ansible.builtin.template:
+        src: "systemd/geoip-update.service.j2"
+        dest: "{{ systemd_lib_directory }}/geoip-update.service"
+        owner: root
+        group: root
+        mode: "0644"
+      notify:
+        - daemon reload
+
+    - name: create systemd timer unit geoip-update.timer
+      ansible.builtin.template:
+        src: "systemd/geoip-update.timer.j2"
+        dest: "{{ systemd_lib_directory }}/geoip-update.timer"
+        owner: root
+        group: root
+        mode: "0644"
+      notify:
+        - daemon reload
+
+- name: run download helper
+  ansible.builtin.command:
+    cmd: /bin/geoip_update.py
+  when:
+    - geoip_force is defined
+    - geoip_force
+
+# - name: extract geoip archives
+#   ansible.builtin.command:
+#     cmd: find "{{ geoip_remote_tmp_directory }}" -name '*.gz' -exec gzip -d {} \;
+#     # cmd: gunzip "{{ geoip_remote_tmp_directory }}/{{ item | geoip_filename() }}"
+#     # creates: "{{ geoip_remote_tmp_directory }}"
+#   #loop: "{{ geoip_download_files }}"
+#   #loop_control:
+#   #  label: "file: {{ geoip_remote_tmp_directory }}/{{ item | geoip_filename() }}"
+#
+# - name: find geoip files
+#   ansible.builtin.find:
+#     paths: "{{ geoip_remote_tmp_directory }}"
+#     file_type: file
+#     patterns:
+#       - "*.dat"
+#     recurse: false
+#   register: found_files
+#
+# - name: deploy geoip files
+#   ansible.builtin.copy:
+#     src: "{{ item }}"
+#     dest: "{{ geoip_destination }}/"
+#     mode: "0644"
+#     remote_src: true
+#   loop:
+#     "{{ found_files.files |
+#         sort(attribute='path', reverse=True) |
+#         map(attribute='path') | list }}"
+#   loop_control:
+#     label: "file: {{ item }}"
+#   when:
+#     - found_files.files is defined
+#     - found_files.files | count > 0
+
+...

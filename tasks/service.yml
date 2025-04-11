@@ -1,0 +1,32 @@
+---
+
+- name: flush handlers at this point to avoid double restart
+  ansible.builtin.meta: flush_handlers
+
+- name: ensure {{ geoip_update_service.name }} is running and enabled
+  ansible.builtin.service:
+    name: "{{ geoip_update_service.name }}"
+    state: started
+    enabled: "{{ geoip_update_service.enabled }}"
+
+- name: ensure {{ geoip_update_service.name }} is running and enabled
+  when:
+    - geoip_update_service.enabled | bool
+  block:
+    - name: "{{ geoip_update_service.name }}.timer"
+      ansible.builtin.service:
+        name: "{{ geoip_update_service.name }}.timer"
+        state: "{{ geoip_update_service.state }}"
+        enabled: "{{ geoip_update_service.enabled }}"
+
+- name: ensure {{ geoip_update_service.name }} is disabled
+  when:
+    - not geoip_update_service.enabled | bool
+  block:
+    - name: "{{ geoip_update_service.name }}.timer"
+      ansible.builtin.service:
+        name: "{{ geoip_update_service.name }}.timer"
+        state: stopped
+        enabled: false
+
+...

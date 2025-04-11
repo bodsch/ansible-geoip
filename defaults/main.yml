@@ -1,0 +1,35 @@
+---
+
+geoip_force: false
+
+geoip_destination: /usr/share/GeoIP
+
+geoip_update_service:
+  name: geoip-update
+  enabled: true
+  state: started
+
+geoip_databases:
+  db_ip:
+    country:
+      both: true
+      ipv4: true
+      ipv6: false
+    city:
+      both: true
+      ipv4: false
+      ipv6: true
+  maxmind:
+    asn:
+      both: false
+      ipv4: false
+      ipv6: false
+    country:
+      both: false
+      ipv4: false
+      ipv6: false
+    city:
+      both: false
+      ipv4: false
+      ipv6: false
+

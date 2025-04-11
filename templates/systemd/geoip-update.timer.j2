@@ -1,0 +1,11 @@
+#jinja2: trim_blocks: True, lstrip_blocks: True
+# {{ ansible_managed }}
+
+[Unit]
+Description         = update geoip database.
+
+[Timer]
+OnUnitInactiveSec   = 4w
+
+[Install]
+WantedBy            = timers.target
