@@ -1,0 +1,7 @@
+---
+
+geoip_dependencies:
+  - gzip
+  - python-requests
+
+...
