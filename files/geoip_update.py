@@ -116,6 +116,7 @@ class GeoIp:
 
         else:
             logging.info("The current data is not yet out of date.")
+            self.download_data()
 
     def download_data(self):
         """
