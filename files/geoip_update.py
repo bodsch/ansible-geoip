@@ -72,15 +72,15 @@ class GeoIp:
         log_level_numeric = getattr(logging, self.log_level)  # Umwandlung von Text in Level
 
         # DEBUG-Format (kurzer Zeitstempel)
-        debug_formatter = logging.Formatter("%(asctime)s - %(levelname)s - %(message)s", "%H:%M:%S")
+        # debug_formatter = logging.Formatter("%(asctime)s - %(levelname)s - %(message)s", "%H:%M:%S")
 
         # Standard-Format für INFO+
-        standard_formatter = logging.Formatter("%(asctime)s - %(levelname)s - %(message)s", "%Y-%m-%d %H:%M:%S")
+        # standard_formatter = logging.Formatter("%(asctime)s - %(levelname)s - %(message)s", "%Y-%m-%d %H:%M:%S")
 
         # Konsolen-Logging
         console_handler = logging.StreamHandler(sys.stdout)
-        console_handler.setLevel(log_level_numeric)
-        console_handler.setFormatter(debug_formatter if log_level_numeric == logging.DEBUG else standard_formatter)
+        # console_handler.setLevel(log_level_numeric)
+        # console_handler.setFormatter(debug_formatter if log_level_numeric == logging.DEBUG else standard_formatter)
 
         # Haupt-Logger konfigurieren
         logger = logging.getLogger()
@@ -104,7 +104,7 @@ class GeoIp:
 
         self.create_directory(self.cache_directory)
 
-        out_of_cache = self.cache_valid(cache_file_remove=True)
+        out_of_cache = self.cache_valid(cache_file_remove=False)
 
         if out_of_cache:
             status_code, output = self.download_data()
@@ -116,7 +116,6 @@ class GeoIp:
 
         else:
             logging.info("The current data is not yet out of date.")
-            self.download_data()
 
     def download_data(self):
         """
@@ -163,12 +162,13 @@ class GeoIp:
                     logging.error(f'Download failed for {k}: {r.status_code}\n')
                     # sys.exit(1)
 
+        logging.debug(result)
+
         # extract http result codes
         # unifed all list entries and get highest value
         _sorted = sorted(list(set(list(result.values()))), reverse=True)
 
         return_code = _sorted[0]
-        logging.debug(return_code)
 
         if return_code == 200:
             return_msg = "The downloads were successful."

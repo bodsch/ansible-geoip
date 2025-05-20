@@ -3,6 +3,7 @@
 
 [Unit]
 Description         = update geoip database.
+After               = syslog.target network.target
 
 [Service]
 Type                = oneshot
@@ -12,6 +13,8 @@ User                = root
 Group               = root
 
 ExecStart           = /bin/geoip_update.py
+
+SyslogIdentifier    = geoip-update
 
 [Install]
 WantedBy            = multi-user.target

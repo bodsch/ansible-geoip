@@ -5,7 +5,9 @@
 Description         = update geoip database.
 
 [Timer]
-OnUnitInactiveSec   = 1w
+OnBootSec           = 15min
+OnUnitInactiveSec   = 48h
+Unit                = geoip-update.service
 
 [Install]
 WantedBy            = timers.target
