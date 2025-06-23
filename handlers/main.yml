@@ -7,4 +7,10 @@
   when:
     - ansible_service_mgr == 'systemd'
 
+- name: restart geoip-update
+  become: true
+  ansible.builtin.service:
+    name: geoip-update
+    state: restarted
+
 ...

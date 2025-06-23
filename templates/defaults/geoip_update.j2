@@ -1,0 +1,9 @@
+#jinja2: trim_blocks: True, lstrip_blocks: True
+# {{ ansible_managed }}
+# {{ geoip_legacy }}
+OPTIONS=" \
+{% if geoip_legacy | default('true') | bool %}
+  --legacy
+{% else %}
+{% endif %}
+"
