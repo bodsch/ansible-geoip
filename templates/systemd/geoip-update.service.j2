@@ -8,11 +8,13 @@ After               = syslog.target network.target
 [Service]
 Type                = oneshot
 
+EnvironmentFile     = {{ geoip_defaults_directory }}/geoip_update
+
 WorkingDirectory    = /tmp
 User                = root
 Group               = root
 
-ExecStart           = /bin/geoip_update.py
+ExecStart           = /bin/geoip_update.py $OPTIONS
 
 SyslogIdentifier    = geoip-update
 

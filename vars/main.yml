@@ -12,5 +12,7 @@ geoip_source_base: https://dl.miyuru.lk/geoip
 geoip_dependencies:
   - gzip
 
+geoip_defaults_directory: /etc/default
+
 systemd_etc_directory: /etc/systemd/system
 systemd_lib_directory: /lib/systemd/system

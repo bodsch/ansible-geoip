@@ -1,4 +1,11 @@
 ---
+- name: create GeoIP.conf
+  ansible.builtin.template:
+    src: GeoIP.conf.j2
+    dest: /etc/GeoIP.conf
+    owner: root
+    group: root
+    mode: "0644"
 
 - name: install download helper
   ansible.builtin.copy:
@@ -10,6 +17,19 @@
   when:
     - ansible_service_mgr == 'systemd'
   block:
+
+    - name: create geoip run configuration
+      become: true
+      ansible.builtin.template:
+        src: "defaults/geoip_update.j2"
+        dest: "{{ geoip_defaults_directory }}/geoip_update"
+        force: true
+        owner: root
+        group: root
+        mode: "0640"
+      notify:
+        - restart geoip-update
+
     - name: create systemd service unit geoip-update.service
       ansible.builtin.template:
         src: "systemd/geoip-update.service.j2"
@@ -32,7 +52,7 @@
 
 - name: run download helper
   ansible.builtin.command:
-    cmd: /bin/geoip_update.py
+    cmd: /bin/geoip_update.py {{ '--legacy' if geoip_legacy else '' }}
   when:
     - geoip_force is defined
     - geoip_force
