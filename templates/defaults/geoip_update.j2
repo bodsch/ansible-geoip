@@ -3,7 +3,15 @@
 # {{ geoip_legacy }}
 OPTIONS=" \
 {% if geoip_legacy | default('true') | bool %}
-  --legacy
+  --legacy \
 {% else %}
+{% endif %}
+{% if geoip_files.owner is defined and
+      geoip_files.owner | string | length > 0 %}
+  --owner {{ geoip_files.owner }} \
+{% endif %}
+{% if geoip_files.group is defined and
+      geoip_files.group | string | length > 0 %}
+  --group {{ geoip_files.group }} \
 {% endif %}
 "

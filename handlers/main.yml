@@ -5,7 +5,7 @@
     daemon_reload: true
     force: true
   when:
-    - ansible_service_mgr == 'systemd'
+    - ansible_facts.service_mgr == 'systemd'
 
 - name: restart geoip-update
   become: true

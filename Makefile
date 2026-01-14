@@ -1,6 +1,6 @@
 #
 export TOX_SCENARIO         ?= default
-export TOX_ANSIBLE          ?= ansible_9.5
+export TOX_ANSIBLE          ?= ansible_13.0
 export TOX_SILENCE          ?= true
 # --------------------------------------------------------
 
@@ -13,7 +13,7 @@ CACHE_DIR                   := $(HOME)/.cache/ansible/ansible-hooks
 # --------------------------------------------------------
 
 # Alle Targets, die schlicht ein Skript in hooks/ aufrufen
-HOOKS := doc prepare converge destroy verify test lint gh-clean
+HOOKS := doc prepare converge destroy verify idempotence test lint gh-clean
 TARGET_DIR := hooks
 
 .SILENT: hooks-ready

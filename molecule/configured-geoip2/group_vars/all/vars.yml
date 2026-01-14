@@ -10,6 +10,10 @@ geoip_maxmind:
     - GeoLite2-City
     - GeoLite2-Country
 
+geoip_files:
+  owner: "{{ 'www-data' if ansible_facts.os_family | lower == 'debian' else 'http' }}"
+  group: "{{ 'www-data' if ansible_facts.os_family | lower == 'debian' else 'http' }}"
+
 # geoip_databases:
 #   db_ip:
 #     country:

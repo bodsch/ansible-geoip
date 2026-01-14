@@ -9,6 +9,10 @@ geoip_update_service:
   enabled: true
   state: started
 
+geoip_files:
+  owner: ""
+  group: ""
+
 geoip_legacy: true
 
 geoip_maxmind:
@@ -42,4 +46,3 @@ geoip_databases:
       both: false
       ipv4: false
       ipv6: false
-

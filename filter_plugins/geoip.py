@@ -3,7 +3,8 @@
 # (c) 2025, Bodo Schulz <bodo@boone-schulz.de>
 # Apache (see LICENSE or https://opensource.org/licenses/Apache-2.0)
 
-from __future__ import (absolute_import, division, print_function)
+from __future__ import absolute_import, division, print_function
+
 __metaclass__ = type
 
 
@@ -14,43 +15,43 @@ display = Display()
 
 class FilterModule(object):
     """
-        Ansible file jinja2 tests
+    Ansible file jinja2 tests
     """
 
     def filters(self):
         return {
-            'geoip_downloads': self.geoip_downloads,
-            'geoip_filename': self.geoip_filename,
+            "geoip_downloads": self.geoip_downloads,
+            "geoip_filename": self.geoip_filename,
         }
 
     def geoip_downloads(self, data):
         """
-          return a list of files
+        return a list of files
         """
-        display.v(f"geoip_downloads({data})")
+        display.vv(f"geoip_downloads({data})")
         result = []
 
         result = self.expand_and_clean(data)
         result = self.generate_paths(result)
 
-        display.v(f" = result {result}")
+        display.vv(f" = result {result}")
         return result
 
     def geoip_filename(self, data):
         """
-          return a list of files
+        return a list of files
         """
-        display.v(f"geoip_filename({data})")
+        display.vv(f"geoip_filename({data})")
 
         *_, db_type, filename = data.strip("/").split("/")
 
         display.v(f" - {filename}")
 
-        filename = filename.replace('.dat.gz', '')
+        filename = filename.replace(".dat.gz", "")
 
         result = f"{filename}_{db_type}.dat.gz"
 
-        display.v(f" = result {result}")
+        display.vv(f" = result {result}")
 
         return result
 
@@ -75,14 +76,15 @@ class FilterModule(object):
         return data if data is True else None
 
     def generate_paths(self, data, prefix=[]):
-        """
-        """
-        display.v(f"generate_paths({data}, {prefix})")
+        """ """
+        display.vv(f"generate_paths({data}, {prefix})")
         paths = []
         if isinstance(data, dict):
             for key, value in data.items():
-                if isinstance(value, dict) and set(value.keys()).issubset({"ipv4", "ipv6"}):
-                    provider = prefix[-1].replace('_', '')
+                if isinstance(value, dict) and set(value.keys()).issubset(
+                    {"ipv4", "ipv6"}
+                ):
+                    provider = prefix[-1].replace("_", "")
                     database_type = key
                     ipv4 = value.get("ipv4", False)
                     ipv6 = value.get("ipv6", False)
@@ -91,9 +93,13 @@ class FilterModule(object):
                         paths.append(f"{provider}/{database_type}/{provider}.dat.gz")
                     else:
                         if ipv4:
-                            paths.append(f"{provider}/{database_type}/{provider}4.dat.gz")
+                            paths.append(
+                                f"{provider}/{database_type}/{provider}4.dat.gz"
+                            )
                         if ipv6:
-                            paths.append(f"{provider}/{database_type}/{provider}6.dat.gz")
+                            paths.append(
+                                f"{provider}/{database_type}/{provider}6.dat.gz"
+                            )
                 else:
                     paths.extend(self.generate_paths(value, prefix + [key]))
         return paths

@@ -15,7 +15,7 @@
 
 - name: configure systemd
   when:
-    - ansible_service_mgr == 'systemd'
+    - ansible_facts.service_mgr == 'systemd'
   block:
 
     - name: create geoip run configuration
