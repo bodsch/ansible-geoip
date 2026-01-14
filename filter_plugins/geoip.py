@@ -12,6 +12,7 @@ from ansible.utils.display import Display
 
 display = Display()
 
+_STR_WRAPPERS = {"AnsibleUnsafeText", "AnsibleUnicode", "AnsibleVaultEncryptedUnicode", "_AnsibleTaggedStr"}
 
 class FilterModule(object):
     """
@@ -20,9 +21,55 @@ class FilterModule(object):
 
     def filters(self):
         return {
+            "geoip_owner": self.geoip_owner,
+            "geoip_group": self.geoip_group,
             "geoip_downloads": self.geoip_downloads,
             "geoip_filename": self.geoip_filename,
         }
+
+    def geoip_owner(self, data, default="root"):
+        """
+        """
+        display.vv(f"geoip_owner({data}, default={default})")
+
+        result = default
+
+        if data is None:
+            return default
+
+        t = type(data)
+
+        # String-ähnliche Wrapper (z.B. AnsibleUnsafeText)
+        if isinstance(data, str) or t.__name__ in _STR_WRAPPERS:
+            if len(data) == 0:
+                result = default
+            else:
+                result = data
+
+        # display.vv(f"= result: '{result}' {type(result)}")
+        return result
+
+    def geoip_group(self, data, default="root"):
+        """
+        """
+        display.vv(f"geoip_group({data}, default={default})")
+
+        result = default
+
+        if data is None:
+            return default
+
+        t = type(data)
+
+        # String-ähnliche Wrapper (z.B. AnsibleUnsafeText)
+        if isinstance(data, str) or t.__name__ in _STR_WRAPPERS:
+            if len(data) == 0:
+                result = default
+            else:
+                result = data
+
+        # display.vv(f"= result: '{result}' {type(result)}")
+        return result
 
     def geoip_downloads(self, data):
         """

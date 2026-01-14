@@ -39,7 +39,7 @@ provisioner:
   log: true
   ansible_args:
     - --diff
-    - -v
+    - -vv
   config_options:
     defaults:
       deprecation_warnings: true

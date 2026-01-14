@@ -20,31 +20,19 @@
         - main.yml
       skip: true
 
+- name: detect ansible check_mode
+  bodsch.core.check_mode:
+  register: _check_mode
+
+- name: define running_in_check_mode
+  ansible.builtin.set_fact:
+    running_in_check_mode: '{{ _check_mode.check_mode }}'
+
 - name: install requirements
   ansible.builtin.package:
     name: "{{ geoip_dependencies }}"
     state: present
   when:
     - geoip_dependencies | default([]) | count > 0
-
-- name: create download directory
-  ansible.builtin.file:
-    path: "{{ geoip_remote_tmp_directory }}"
-    state: directory
-    mode: "0750"
-  check_mode: false
-
-- name: create installation directory
-  ansible.builtin.file:
-    path: "{{ geoip_destination }}"
-    state: directory
-    owner: "{{ geoip_files.owner | default(omit) }}"
-    group: "{{ geoip_files.group | default(omit) }}"
-    mode: "0750"
-  check_mode: false
-
-- name: define geoip download files
-  ansible.builtin.set_fact:
-    geoip_download_files: "{{ geoip_databases | geoip_downloads() }}"
 
 ...

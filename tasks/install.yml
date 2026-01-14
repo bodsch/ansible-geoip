@@ -1,4 +1,14 @@
 ---
+
+- name: create installation directory
+  ansible.builtin.file:
+    path: "{{ geoip_destination }}"
+    state: directory
+    owner: "{{ geoip_files.owner | geoip_owner(default='root') }}"
+    group: "{{ geoip_files.group | geoip_group(default='root') }}"
+    mode: "0750"
+  check_mode: false
+
 - name: create GeoIP.conf
   ansible.builtin.template:
     src: GeoIP.conf.j2
@@ -16,6 +26,7 @@
 - name: configure systemd
   when:
     - ansible_facts.service_mgr == 'systemd'
+    - not running_in_check_mode
   block:
 
     - name: create geoip run configuration
@@ -51,44 +62,11 @@
         - daemon reload
 
 - name: run download helper
-  ansible.builtin.command:
-    cmd: /bin/geoip_update.py {{ '--legacy' if geoip_legacy else '' }}
   when:
     - geoip_force is defined
     - geoip_force
-
-# - name: extract geoip archives
-#   ansible.builtin.command:
-#     cmd: find "{{ geoip_remote_tmp_directory }}" -name '*.gz' -exec gzip -d {} \;
-#     # cmd: gunzip "{{ geoip_remote_tmp_directory }}/{{ item | geoip_filename() }}"
-#     # creates: "{{ geoip_remote_tmp_directory }}"
-#   #loop: "{{ geoip_download_files }}"
-#   #loop_control:
-#   #  label: "file: {{ geoip_remote_tmp_directory }}/{{ item | geoip_filename() }}"
-#
-# - name: find geoip files
-#   ansible.builtin.find:
-#     paths: "{{ geoip_remote_tmp_directory }}"
-#     file_type: file
-#     patterns:
-#       - "*.dat"
-#     recurse: false
-#   register: found_files
-#
-# - name: deploy geoip files
-#   ansible.builtin.copy:
-#     src: "{{ item }}"
-#     dest: "{{ geoip_destination }}/"
-#     mode: "0644"
-#     remote_src: true
-#   loop:
-#     "{{ found_files.files |
-#         sort(attribute='path', reverse=True) |
-#         map(attribute='path') | list }}"
-#   loop_control:
-#     label: "file: {{ item }}"
-#   when:
-#     - found_files.files is defined
-#     - found_files.files | count > 0
+    - not running_in_check_mode
+  ansible.builtin.command:
+    cmd: /bin/geoip_update.py {{ '--legacy' if geoip_legacy else '' }}
 
 ...
