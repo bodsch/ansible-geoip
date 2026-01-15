@@ -7,6 +7,25 @@ Installs legacy geoip data from [miyuru.lk](https://www.miyuru.lk/geoiplegacy) o
 
 WIP
 
+## Requirements & Dependencies
+
+Ansible Collections
+
+- [bodsch.core](https://github.com/bodsch/ansible-collection-core)
+
+```bash
+ansible-galaxy collection install bodsch.core
+```
+or
+```bash
+ansible-galaxy collection install --requirements-file collections.yml
+```
+
+## supported operating systems
+
+* Arch Linux
+* Debian based
+
 ## usage 
 
 ```yaml
@@ -57,11 +76,6 @@ geoip_databases:
       ipv4: false
       ipv6: false
 ```
-
-## supported operating systems
-
-* Arch Linux
-* Debian based
 
 
 ## Contribution
