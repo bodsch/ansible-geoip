@@ -1,5 +1,14 @@
 ---
 
+- name: create cache directory
+  ansible.builtin.file:
+    path: "{{ geoip_remote_tmp_directory }}"
+    state: directory
+    owner: root
+    group: root
+    mode: "0750"
+  check_mode: false
+
 - name: create installation directory
   ansible.builtin.file:
     path: "{{ geoip_destination }}"
