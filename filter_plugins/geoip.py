@@ -12,7 +12,13 @@ from ansible.utils.display import Display
 
 display = Display()
 
-_STR_WRAPPERS = {"AnsibleUnsafeText", "AnsibleUnicode", "AnsibleVaultEncryptedUnicode", "_AnsibleTaggedStr"}
+_STR_WRAPPERS = {
+    "AnsibleUnsafeText",
+    "AnsibleUnicode",
+    "AnsibleVaultEncryptedUnicode",
+    "_AnsibleTaggedStr",
+}
+
 
 class FilterModule(object):
     """
@@ -28,8 +34,7 @@ class FilterModule(object):
         }
 
     def geoip_owner(self, data, default="root"):
-        """
-        """
+        """ """
         display.vv(f"geoip_owner({data}, default={default})")
 
         result = default
@@ -50,8 +55,7 @@ class FilterModule(object):
         return result
 
     def geoip_group(self, data, default="root"):
-        """
-        """
+        """ """
         display.vv(f"geoip_group({data}, default={default})")
 
         result = default
